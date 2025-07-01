@@ -1,9 +1,9 @@
 <template>
   <!-- Dialog Trigger -->
   <div 
-    v-if="showTrigger"
+    v-if="content.showTrigger"
     @click="openDialog"
-    :class="cn('inline-block', triggerClass)"
+    :class="cn('inline-block', content.triggerClass)"
   >
     <slot name="trigger">
       <button
@@ -14,7 +14,7 @@
           'h-10 px-4 py-2'
         )"
       >
-        {{ triggerText || 'Open Dialog' }}
+        {{ content.triggerText || 'Open Dialog' }}
       </button>
     </slot>
   </div>
@@ -44,17 +44,17 @@
           'fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200',
           'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]',
           'rounded-lg',
-          size === 'sm' && 'max-w-sm',
-          size === 'md' && 'max-w-md', 
-          size === 'lg' && 'max-w-2xl',
-          size === 'xl' && 'max-w-4xl',
-          size === 'full' && 'max-w-[95vw] max-h-[95vh]',
-          contentClass
+          content.size === 'sm' && 'max-w-sm',
+          content.size === 'md' && 'max-w-md', 
+          content.size === 'lg' && 'max-w-2xl',
+          content.size === 'xl' && 'max-w-4xl',
+          content.size === 'full' && 'max-w-[95vw] max-h-[95vh]',
+          content.contentClass
         )"
       >
         <!-- Close Button -->
         <button
-          v-if="showCloseButton !== false"
+          v-if="content.showCloseButton !== false"
           type="button"
           @click="closeDialog"
           :class="cn(
@@ -69,26 +69,26 @@
         </button>
 
         <!-- Header -->
-        <div v-if="title || description" class="flex flex-col space-y-1.5 text-center sm:text-left">
+        <div v-if="content.title || content.description" class="flex flex-col space-y-1.5 text-center sm:text-left">
           <h2 
-            v-if="title"
+            v-if="content.title"
             :id="headerId"
             :class="cn(
               'text-lg font-semibold leading-none tracking-tight',
-              titleClass
+              content.titleClass
             )"
           >
-            {{ title }}
+            {{ content.title }}
           </h2>
           <p 
-            v-if="description"
+            v-if="content.description"
             :id="descriptionId"
             :class="cn(
               'text-sm text-muted-foreground',
-              descriptionClass
+              content.descriptionClass
             )"
           >
-            {{ description }}
+            {{ content.description }}
           </p>
         </div>
 
@@ -96,24 +96,24 @@
         <div 
           :class="cn(
             'flex-1',
-            bodyClass
+            content.bodyClass
           )"
         >
-          <wwElement v-if="body" v-bind="body" />
+          <wwElement v-if="content.body" v-bind="content.body" />
           <slot v-else></slot>
         </div>
 
         <!-- Footer -->
         <div 
-          v-if="showFooter !== false"
+          v-if="content.showFooter !== false"
           :class="cn(
             'flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2',
-            footerClass
+            content.footerClass
           )"
         >
           <!-- Cancel Button -->
           <button
-            v-if="showCancelButton !== false"
+            v-if="content.showCancelButton !== false"
             type="button"
             @click="handleCancel"
             :class="cn(
@@ -123,25 +123,25 @@
               'mt-2 sm:mt-0'
             )"
           >
-            {{ cancelText || 'Cancel' }}
+            {{ content.cancelText || 'Cancel' }}
           </button>
 
           <!-- Confirm Button -->
           <button
-            v-if="showConfirmButton !== false"
+            v-if="content.showConfirmButton !== false"
             type="button"
             @click="handleConfirm"
             :class="cn(
               'inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-              confirmVariant === 'destructive' ? 'bg-destructive text-destructive-foreground hover:bg-destructive/90' : 'bg-primary text-primary-foreground hover:bg-primary/90',
+              content.confirmVariant === 'destructive' ? 'bg-destructive text-destructive-foreground hover:bg-destructive/90' : 'bg-primary text-primary-foreground hover:bg-primary/90',
               'h-10 px-4 py-2'
             )"
           >
-            {{ confirmText || 'Confirm' }}
+            {{ content.confirmText || 'Confirm' }}
           </button>
 
           <!-- Custom Footer Content -->
-          <wwElement v-if="footer" v-bind="footer" />
+          <wwElement v-if="content.footer" v-bind="content.footer" />
         </div>
       </div>
     </div>
@@ -211,27 +211,27 @@ const closeDialog = () => {
 }
 
 const handleBackdropClick = () => {
-  if (props.closeOnBackdropClick !== false) {
+  if (props.content.closeOnBackdropClick !== false) {
     closeDialog()
   }
 }
 
 const handleCancel = () => {
   emit('cancel')
-  if (props.closeOnCancel !== false) {
+  if (props.content.closeOnCancel !== false) {
     closeDialog()
   }
 }
 
 const handleConfirm = () => {
   emit('confirm')
-  if (props.closeOnConfirm !== false) {
+  if (props.content.closeOnConfirm !== false) {
     closeDialog()
   }
 }
 
 const handleKeyDown = (event) => {
-  if (event.key === 'Escape' && props.closeOnEscape !== false) {
+  if (event.key === 'Escape' && props.content.closeOnEscape !== false) {
     closeDialog()
   }
 }
